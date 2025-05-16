@@ -18,8 +18,15 @@ export class Grid {
             return true
         })
     }
+    
+    public columnsValid(): boolean {
+        
+        for(let n=1; n<=9; n++) {
+            for(let col=0; col<9; col++) {
+                if (!this.grid.some(row => row[col] === n )) return false
+            }
+        }
+        return true
+    }
+
 }
-
-
-
-
