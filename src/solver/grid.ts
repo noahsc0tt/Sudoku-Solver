@@ -29,4 +29,10 @@ export class Grid {
         return true
     }
 
+    public isValid(): boolean { return this.columnsValid() && this.rowsValid() }
+    
+    public printGrid(): void {
+        this.grid.forEach(row => console.log(row))
+    }
 }
+
