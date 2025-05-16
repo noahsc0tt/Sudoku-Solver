@@ -11,6 +11,16 @@ export class Grid {
     public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
         return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
     }
+
+    public gridInputValid(): boolean {
+        return this.rowInputValid() && this.columnInputValid()
+    }
+    
+    public rowInputValid(): boolean {
+        return this.grid.every( row => {
+            row.length == (new Set(row)).size
+        })
+    }
     
     public rowsValid(): boolean {
         return this.grid.every(row => {
