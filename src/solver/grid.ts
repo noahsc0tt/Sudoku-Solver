@@ -51,8 +51,28 @@ export class Grid {
         return true
     }
 
+    private boxesValid(): boolean {
+        let boxMap: Map<number, number[]> = new Map()
+        let box: number
+        
+        this.grid.forEach((row, rowIndex) => {
+            row.forEach((value, columnIndex) => {
+                box = Coords.getBox(rowIndex, columnIndex)
+                if (!boxMap.has(box)) boxMap.set(box, [])
+                boxMap.get(box)!.push(value)
+            })
+        })
+
+        for (const entry of boxMap.entries())
+            if (entry[1].length !== (new Set(entry[1])).size) return false
+        
+        return true
+    }
+
     
-    public isValid(): boolean { return this.columnsValid() && this.rowsValid() }
+    public isValid(): boolean { 
+        return this.columnsValid() && this.rowsValid() && this.boxesValid() 
+    }
     
     public printGrid(): void {
         this.grid.forEach(row => console.log(row))
