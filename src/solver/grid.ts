@@ -6,7 +6,7 @@ interface ValueLocations {
     boxes: number[];
 }
 
-export class Grid {
+export default class Grid {
     private grid: number[][]
     readonly SIZE: number = 9
     readonly EMPTY_VALUE: number = 0
@@ -88,10 +88,3 @@ export class Grid {
         this.grid.forEach(row => console.log(row))
     }
 }
-
-function main(): void {
-    let arr: Cell[] = Grid.createCellArray([2,1,3],[2,4,5], [3,2,3], [3,2,5])
-    console.log(Grid.cellsValid(arr))
-}
-
-main()
