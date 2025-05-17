@@ -8,10 +8,12 @@ export class Coords {
         this.row = row 
         this.column = column
     }
-    public static getBox(coords: Coords) {
+
+    public static getBox(row: number, column: number): number
+    public static getBox(coordsOrRow: Coords | number, column?: number): number {
+        let coords = typeof coordsOrRow === "number" ? new Coords(coordsOrRow, column!) : coordsOrRow
         let x: number = Math.floor(coords.column/3)
         let y: number = Math.floor(coords.row/3)
-        console.log(x,y)
 
         return x + 3*y
     }
