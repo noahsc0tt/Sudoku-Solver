@@ -9,13 +9,21 @@ export class Coords {
         this.column = column
     }
 
+    public static getBox(coords: Coords): number
     public static getBox(row: number, column: number): number
     public static getBox(coordsOrRow: Coords | number, column?: number): number {
-        let coords = typeof coordsOrRow === "number" ? new Coords(coordsOrRow, column!) : coordsOrRow
-        let x: number = Math.floor(coords.column/3)
-        let y: number = Math.floor(coords.row/3)
+        let row: number
 
-        return x + 3*y
+        if (coordsOrRow instanceof Coords) {
+            column = coordsOrRow.column
+            row = coordsOrRow.row
+        }
+        else row = coordsOrRow
+
+        const boxColumn: number = Math.floor(column!/3)
+        const boxRow: number = Math.floor(row/3)
+
+        return boxColumn + 3*boxRow
     }
 }
 export class Cell {
