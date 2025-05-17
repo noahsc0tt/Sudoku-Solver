@@ -1,4 +1,4 @@
-import { Cell } from "./cell.ts"
+import { Cell, Coords } from "./cell.ts"
 
 export class Grid {
     private grid: number[][]
@@ -15,14 +15,20 @@ export class Grid {
     }
     
     public static cellInputsValid(cells: Cell[]): boolean {
-        return cells.every(cell => {
-            let sameValues: Cell[] = cells.filter(c => c.value===cell.value)
-            return sameValues.every( cll => {
-                let sameRow: Cell[] = sameValues.filter(c => c.coords.row===cll.coords.row)
-                let sameColumn: Cell[] = sameValues.filter(c => c.coords.column===cll.coords.column)
-                return sameRow.length===1 && sameColumn.length===1
-            })
+        let uniqueValueMap: Map<number, number[][]> = new Map()
+
+        cells.forEach(cell => uniqueValueMap.set(cell.value, [[],[]]))
+        cells.forEach(cell => {
+            let coordsArray: number[][] = uniqueValueMap.get(cell.value)!
+            coordsArray[0].push(cell.coords.row)
+            coordsArray[1].push(cell.coords.column)
         })
+        
+        return [...uniqueValueMap.entries()].every(entry => 
+                entry[1][0].length === (new Set(entry[1][0])).size &&
+                entry[1][1].length === (new Set(entry[1][1])).size
+            )
+        
     }
     
     private rowsValid(): boolean {
