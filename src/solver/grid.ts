@@ -4,6 +4,7 @@ export class Grid {
     private grid: number[][]
     
     constructor(cells: Cell[]) {
+        if (!Grid.cellsValid(cells)) throw new Error("Cell inputs violate sudoku rules")
         this.grid = Array.from({length: 9}, () => Array(9).fill(-1))
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
@@ -14,7 +15,7 @@ export class Grid {
         return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
     }
     
-    public static cellInputsValid(cells: Cell[]): boolean {
+    public static cellsValid(cells: Cell[]): boolean {
         let uniqueValueMap: Map<number, number[][]> = new Map()
 
         cells.forEach(cell => {
@@ -57,7 +58,7 @@ export class Grid {
 }
 
 function main(): void {
-    let arr: Cell[] = Grid.createCellArray([2,1,3],[2,4,5], [2,2,3])
+    let arr: Cell[] = Grid.createCellArray([2,1,3],[2,4,5], [3,2,3], [3,2,5])
     console.log(Grid.cellInputsValid(arr))
 }
 
