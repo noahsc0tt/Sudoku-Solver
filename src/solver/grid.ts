@@ -17,18 +17,19 @@ export class Grid {
     public static cellInputsValid(cells: Cell[]): boolean {
         let uniqueValueMap: Map<number, number[][]> = new Map()
 
-        cells.forEach(cell => uniqueValueMap.set(cell.value, [[],[]]))
         cells.forEach(cell => {
+            if (!uniqueValueMap.has(cell.value)) uniqueValueMap.set(cell.value, [[],[]])
             let coordsArray: number[][] = uniqueValueMap.get(cell.value)!
             coordsArray[0].push(cell.coords.row)
             coordsArray[1].push(cell.coords.column)
         })
         
-        return [...uniqueValueMap.entries()].every(entry => 
-                entry[1][0].length === (new Set(entry[1][0])).size &&
-                entry[1][1].length === (new Set(entry[1][1])).size
-            )
-        
+        for (const entry of uniqueValueMap.entries()) { 
+            if (entry[1][0].length !== (new Set(entry[1][0])).size ||
+            entry[1][1].length !== (new Set(entry[1][1])).size)
+                return false
+        }
+        return true
     }
     
     private rowsValid(): boolean {
