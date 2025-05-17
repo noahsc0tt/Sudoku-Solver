@@ -8,8 +8,14 @@ export class Coords {
         this.row = row 
         this.column = column
     }
-}
+    public static getBox(coords: Coords) {
+        let x: number = Math.floor(coords.column/3)
+        let y: number = Math.floor(coords.row/3)
+        console.log(x,y)
 
+        return x + 3*y
+    }
+}
 export class Cell {
     readonly coords: Coords
     readonly value: number
