@@ -1,9 +1,15 @@
 import { Cell, Coords } from "./cell.ts"
 
+interface ValueLocations {
+    rows: number[];
+    columns: number[];
+    boxes: number[];
+}
+
 export class Grid {
     private grid: number[][]
     readonly SIZE: number = 9
-    readonly EMPTY_VALUE: number = -1
+    readonly EMPTY_VALUE: number = 0
     
     constructor(cells: Cell[]) {
         if (!Grid.cellsValid(cells)) throw new Error("Cell inputs violate sudoku rules")
@@ -13,26 +19,27 @@ export class Grid {
         )
     }
 
+
     public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
         return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
     }
 
     public static cellsValid(cells: Cell[]): boolean {
-        const uniqueValueMap: Map<number, number[][]> = new Map()
-        let coordsArray: number[][]
+        const valueLocationsMap: Map<number, ValueLocations> = new Map()
+        let sameValueLocations: ValueLocations
 
         cells.forEach(cell => {
-            if (!uniqueValueMap.has(cell.value)) uniqueValueMap.set(cell.value, [[],[],[]])
-            coordsArray = uniqueValueMap.get(cell.value)!
-            coordsArray[0].push(cell.coords.row)
-            coordsArray[1].push(cell.coords.column)
-            coordsArray[2].push(Coords.getBox(cell.coords))
+            if (!valueLocationsMap.has(cell.value)) valueLocationsMap.set(cell.value, { rows: [], columns: [], boxes: []})
+            sameValueLocations = valueLocationsMap.get(cell.value)!
+            sameValueLocations.rows.push(cell.coords.row)
+            sameValueLocations.columns.push(cell.coords.column)
+            sameValueLocations.boxes.push(Coords.getBox(cell.coords))
         })
         
-        for (const [_, otherValues] of uniqueValueMap.entries()) { 
-            if (otherValues[0].length !== (new Set(otherValues[0])).size
-            || otherValues[1].length !== (new Set(otherValues[1])).size
-            || otherValues[2].length !== (new Set(otherValues[2])).size)
+        for (const [_, locations] of valueLocationsMap.entries()) { 
+            if (locations.rows.length !== (new Set(locations.rows)).size
+            || locations.columns.length !== (new Set(locations.columns)).size
+            || locations.boxes.length !== (new Set(locations.boxes)).size)
                 return false
         }
         return true
@@ -55,18 +62,18 @@ export class Grid {
     }
 
     private boxesValid(): boolean {
-        const boxMap: Map<number, number[]> = new Map()
+        const boxValuesMap: Map<number, number[]> = new Map()
         let box: number
         
         this.grid.forEach((row, rowIndex) => {
             row.forEach((value, columnIndex) => {
                 box = Coords.getBox(rowIndex, columnIndex)
-                if (!boxMap.has(box)) boxMap.set(box, [])
-                boxMap.get(box)!.push(value)
+                if (!boxValuesMap.has(box)) boxValuesMap.set(box, [])
+                boxValuesMap.get(box)!.push(value)
             })
         })
 
-        for (const [_, values] of boxMap.entries())
+        for (const [_, values] of boxValuesMap.entries())
             if ((new Set(values)).size !== this.SIZE) return false
         
         return true
