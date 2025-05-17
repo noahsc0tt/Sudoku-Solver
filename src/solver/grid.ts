@@ -2,10 +2,12 @@ import { Cell, Coords } from "./cell.ts"
 
 export class Grid {
     private grid: number[][]
+    readonly SIZE: number = 9
+    readonly EMPTY_VALUE: number = -1
     
     constructor(cells: Cell[]) {
         if (!Grid.cellsValid(cells)) throw new Error("Cell inputs violate sudoku rules")
-        this.grid = Array.from({length: 9}, () => Array(9).fill(-1))
+        this.grid = Array.from({length: this.SIZE}, () => Array(this.SIZE).fill(this.EMPTY_VALUE))
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
         )
@@ -16,20 +18,21 @@ export class Grid {
     }
 
     public static cellsValid(cells: Cell[]): boolean {
-        let uniqueValueMap: Map<number, number[][]> = new Map()
+        const uniqueValueMap: Map<number, number[][]> = new Map()
+        let coordsArray: number[][]
 
         cells.forEach(cell => {
             if (!uniqueValueMap.has(cell.value)) uniqueValueMap.set(cell.value, [[],[],[]])
-            let coordsArray: number[][] = uniqueValueMap.get(cell.value)!
+            coordsArray = uniqueValueMap.get(cell.value)!
             coordsArray[0].push(cell.coords.row)
             coordsArray[1].push(cell.coords.column)
             coordsArray[2].push(Coords.getBox(cell.coords))
         })
         
-        for (const entry of uniqueValueMap.entries()) { 
-            if (entry[1][0].length !== (new Set(entry[1][0])).size
-            || entry[1][1].length !== (new Set(entry[1][1])).size
-            || entry[1][2].length !== (new Set(entry[1][2]).size))
+        for (const [_, otherValues] of uniqueValueMap.entries()) { 
+            if (otherValues[0].length !== (new Set(otherValues[0])).size
+            || otherValues[1].length !== (new Set(otherValues[1])).size
+            || otherValues[2].length !== (new Set(otherValues[2])).size)
                 return false
         }
         return true
@@ -37,14 +40,14 @@ export class Grid {
     
     private rowsValid(): boolean {
         return this.grid.every(row => {
-            for(let n=1; n<=9; n++) if (!row.includes(n)) return false
+            for(let n=1; n<=this.SIZE; n++) if (!row.includes(n)) return false
             return true
         })
     }
     
     private columnsValid(): boolean {
-        for(let col=0; col<9; col++) {
-            for(let n=1; n<=9; n++) {
+        for(let col=0; col<this.SIZE; col++) {
+            for(let n=1; n<=this.SIZE; n++) {
                 if (!this.grid.some(row => row[col] === n )) return false
             }
         }
@@ -52,7 +55,7 @@ export class Grid {
     }
 
     private boxesValid(): boolean {
-        let boxMap: Map<number, number[]> = new Map()
+        const boxMap: Map<number, number[]> = new Map()
         let box: number
         
         this.grid.forEach((row, rowIndex) => {
@@ -63,8 +66,8 @@ export class Grid {
             })
         })
 
-        for (const entry of boxMap.entries())
-            if (entry[1].length !== (new Set(entry[1])).size) return false
+        for (const [_, values] of boxMap.entries())
+            if ((new Set(values)).size !== this.SIZE) return false
         
         return true
     }
