@@ -20,6 +20,15 @@ export default class Grid {
         )
     }
 
+
+    public setRow(rowIndex: number, row: number[]) {
+        this.grid[rowIndex] = row
+    }
+
+    public setGrid(grid: number[][]) {
+        this.grid = grid
+    }
+
     public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
         return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
     }
