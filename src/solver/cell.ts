@@ -1,6 +1,7 @@
 export class Coords {
     readonly row: number
     readonly column: number
+    static readonly BOX_DIMENSION: number = 3
 
     constructor(row: number, column: number) {
         if (row<0 || row>8 || column<0 || column>8) 
@@ -20,8 +21,8 @@ export class Coords {
         }
         else row = coordsOrRow
 
-        const boxColumn: number = Math.floor(column!/3)
-        const boxRow: number = Math.floor(row/3)
+        const boxColumn: number = Math.floor(column!/this.BOX_DIMENSION)
+        const boxRow: number = Math.floor(row/this.BOX_DIMENSION)
 
         return boxColumn + 3*boxRow
     }
