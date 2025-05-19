@@ -1,14 +1,7 @@
 import Grid from "./grid.ts";
 
 export default class Brute_Forcer {
-  private grid: Grid;
-  private attempts: number = 0;
-  readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  constructor(grid: Grid) {
-    this.grid = grid;
-  }
-
+    
   public static getPermutations<T>(digits: T[]): T[][] {
     if (digits.length <= 1) return [digits]
     const permutations: T[][] = []
