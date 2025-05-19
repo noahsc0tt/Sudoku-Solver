@@ -22,10 +22,14 @@ export default class Grid {
 
 
     public setRow(rowIndex: number, row: number[]) {
+        if (rowIndex < 0 || rowIndex >= this.grid.length)
+            throw new RangeError("Row index out of range")
         this.grid[rowIndex] = row
     }
 
     public setGrid(grid: number[][]) {
+        if (grid.length !== this.DIMENSION || grid.some(row => row.length !== this.DIMENSION))
+            throw new TypeError("Incompatible grid dimensions")
         this.grid = grid
     }
 
