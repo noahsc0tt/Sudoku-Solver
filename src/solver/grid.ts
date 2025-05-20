@@ -60,11 +60,9 @@ export default class Grid {
     }
 
     public rowConsistentWithGivenCells(rowIndex: number, row: number[]): boolean {
-        return this.givenCells.filter(cell => cell.coords.row === rowIndex).every(
-            cell => row[cell.coords.column] === cell.value
-        ) && 
-        this.givenCells.filter(cell => cell.coords.row !== rowIndex).every(
-            cell => row[cell.coords.column] !== cell.value)
+        return this.givenCells.every(cell => 
+            (cell.coords.row === rowIndex) === (row[cell.coords.column] === cell.value)
+        )
     }
 
     public consistentWithGivenCells(): boolean {
