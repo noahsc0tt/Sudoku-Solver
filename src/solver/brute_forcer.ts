@@ -12,14 +12,13 @@ export default class Brute_Forcer {
 
     public static getConstraints(grid: Grid): Constraints {
         const constraints: Constraints = { rowConstraints: new Map, columnConstraints: new Map, boxConstraints: new Map }
-        grid.givenCells.forEach(cell => {
-            if (!constraints.rowConstraints.has(cell.coords.row)) 
-                constraints.rowConstraints.set(cell.coords.row, [])
-            if (!constraints.columnConstraints.has(cell.coords.column)) 
-                constraints.columnConstraints.set(cell.coords.column, [])
-            if (!constraints.boxConstraints.has(Coords.getBox(cell.coords))) 
-                constraints.boxConstraints.set(Coords.getBox(cell.coords), [])
+        for (let i=0; i<grid.DIMENSION; i++) {
+            constraints.rowConstraints.set(i, [])
+            constraints.columnConstraints.set(i, [])
+            constraints.boxConstraints.set(i, [])
+        }
 
+        grid.givenCells.forEach(cell => {
             constraints.rowConstraints.get(cell.coords.row)!.push(cell.value)
             constraints.columnConstraints.get(cell.coords.column)!.push(cell.value)
             constraints.boxConstraints.get(Coords.getBox(cell.coords))!.push(cell.value)
