@@ -7,10 +7,10 @@ interface ValueLocations {
 }
 
 export default class Grid {
+    static readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     private grid: number[][]
     readonly givenCells: Cell[]
-    readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    readonly DIMENSION: number = this.digits.length
+    readonly DIMENSION: number = Grid.digits.length
     readonly EMPTY_VALUE: number = 0
     
     constructor(cells: Cell[]) {
