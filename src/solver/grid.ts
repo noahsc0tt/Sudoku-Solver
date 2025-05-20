@@ -59,10 +59,18 @@ export default class Grid {
         return true
     }
 
-    public consistentWithGivenCells() {
-        return this.givenCells.every(cell => {
+    public rowConsistentWithGivenCells(rowIndex: number, row: number[]): boolean {
+        return this.givenCells.filter(cell => cell.coords.row === rowIndex).every(
+            cell => row[cell.coords.column] === cell.value
+        ) && 
+        this.givenCells.filter(cell => cell.coords.row !== rowIndex).every(
+            cell => row[cell.coords.column] !== cell.value)
+    }
+
+    public consistentWithGivenCells(): boolean {
+        return this.givenCells.every(cell =>
             this.grid[cell.coords.row][cell.coords.column] === cell.value
-        })
+        )
     }
 
     public rowsValid(): boolean {
