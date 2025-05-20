@@ -10,8 +10,14 @@ interface Constraints {
 
 export default class Brute_Forcer {
 
-    
-    
+    static readonly rowPermMap: Map<number, number[]> = new Map()
+
+    static {
+        this.getPermutations(Grid.digits).forEach(
+            (rowPerm, index) => Brute_Forcer.rowPermMap.set(index, rowPerm)
+        )
+    }
+
     public static getConstraints(grid: Grid): Constraints {
         const constraints: Constraints = { rowConstraints: new Map, columnConstraints: new Map, boxConstraints: new Map }
         for (let i=0; i<grid.DIMENSION; i++) {
@@ -19,7 +25,7 @@ export default class Brute_Forcer {
             constraints.columnConstraints.set(i, [])
             constraints.boxConstraints.set(i, [])
         }
-        
+
         grid.givenCells.forEach(cell => {
             constraints.rowConstraints.get(cell.coords.row)!.push(cell.value)
             constraints.columnConstraints.get(cell.coords.column)!.push(cell.value)
@@ -27,18 +33,13 @@ export default class Brute_Forcer {
         })
         return constraints
     }
-    
-    public static getRowPossibilities(grid: Grid): Map<number, number[]> {
+
+    public static getPossibilities(grid: Grid) {
         const rowPossibilities: Map<number, number[]> = new Map()
-        const rowPermMap: Map<number, number[]> = new Map()
-    
-            this.getPermutations(Grid.digits).forEach(
-                (rowPerm, index) => rowPermMap.set(index, rowPerm)
-            )
 
         for (let i=0; i<grid.DIMENSION; i++) {
             const possibilities: number[] = []
-            rowPermMap.forEach((rowPerm, key) => {
+            Brute_Forcer.rowPermMap.forEach((rowPerm, key) => {
                 if (grid.rowConsistentWithGivenCells(i, rowPerm))
                         possibilities.push(key)
             })
