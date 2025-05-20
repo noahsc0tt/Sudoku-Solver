@@ -1,25 +1,30 @@
 import { Cell, Coords } from "./cell.ts"
 
 interface ValueLocations {
-    rows: number[];
-    columns: number[];
-    boxes: number[];
+    rows: number[]
+    columns: number[]
+    boxes: number[]
 }
 
 export default class Grid {
     private grid: number[][]
+    readonly givenCells: Cell[]
     readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     readonly DIMENSION: number = this.digits.length
     readonly EMPTY_VALUE: number = 0
     
     constructor(cells: Cell[]) {
         if (!Grid.cellsValid(cells)) throw new Error("Cell inputs violate sudoku rules")
+        this.givenCells = cells
         this.grid = Array.from({length: this.DIMENSION}, () => Array(this.DIMENSION).fill(this.EMPTY_VALUE))
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
         )
     }
 
+    public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
+        return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
+    }
 
     public setRow(rowIndex: number, row: number[]) {
         if (rowIndex < 0 || rowIndex >= this.grid.length)
@@ -31,10 +36,6 @@ export default class Grid {
         if (grid.length !== this.DIMENSION || grid.some(row => row.length !== this.DIMENSION))
             throw new TypeError("Incompatible grid dimensions")
         this.grid = grid
-    }
-
-    public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
-        return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
     }
 
     public static cellsValid(cells: Cell[]): boolean {
@@ -57,15 +58,21 @@ export default class Grid {
         }
         return true
     }
-    
-    private rowsValid(): boolean {
+
+    public consistentWithGivenCells() {
+        return this.givenCells.every(cell => {
+            this.grid[cell.coords.row][cell.coords.column] === cell.value
+        })
+    }
+
+    public rowsValid(): boolean {
         return this.grid.every(row => {
             for(let n=1; n<=this.DIMENSION; n++) if (!row.includes(n)) return false
             return true
         })
     }
     
-    private columnsValid(): boolean {
+    public columnsValid(): boolean {
         for(let col=0; col<this.DIMENSION; col++) {
             for(let n=1; n<=this.DIMENSION; n++) {
                 if (!this.grid.some(row => row[col] === n )) return false
