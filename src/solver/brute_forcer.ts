@@ -1,4 +1,4 @@
-import Grid from "./grid.ts"
+import {Grid} from "./grid.ts"
 import {Cell, Coords} from "./cell.ts"
 
 interface Constraints {
@@ -11,14 +11,20 @@ interface Constraints {
 export default class Brute_Forcer {
 
     static readonly rowPermMap: Map<number, number[]> = new Map()
+    private cellsSoFar: Cell[]
+    private grid: Grid
 
     static {
-        this.getPermutations(Grid.digits).forEach(
-            (rowPerm, index) => Brute_Forcer.rowPermMap.set(index, rowPerm)
-        )
+        Brute_Forcer.getPermutations(Grid.digits).forEach(
+        (rowPerm, index) => this.rowPermMap.set(index, rowPerm))
     }
 
-    public static getConstraints(grid: Grid): Constraints {
+    constructor(grid: Grid) {
+        this.grid = grid
+        this.cellsSoFar = grid.givenCells
+    }
+
+    private static getConstraints(grid: Grid): Constraints {
         const constraints: Constraints = { rowConstraints: new Map, columnConstraints: new Map, boxConstraints: new Map }
         for (let i=0; i<grid.DIMENSION; i++) {
             constraints.rowConstraints.set(i, [])
@@ -34,13 +40,15 @@ export default class Brute_Forcer {
         return constraints
     }
 
-    public static getPossibilities(grid: Grid) {
+
+
+    private getPossibilities(grid: Grid) {
         const rowPossibilities: Map<number, number[]> = new Map()
 
         for (let i=0; i<grid.DIMENSION; i++) {
             const possibilities: number[] = []
             Brute_Forcer.rowPermMap.forEach((rowPerm, key) => {
-                if (grid.rowConsistentWithGivenCells(i, rowPerm))
+                if (grid.rowConsistentWithGivenCells(rowPerm, i))
                         possibilities.push(key)
             })
             rowPossibilities.set(i, possibilities)
@@ -61,4 +69,6 @@ export default class Brute_Forcer {
         }
         return permutations;
     }
+
+    
 }
