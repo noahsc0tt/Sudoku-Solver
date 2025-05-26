@@ -1,14 +1,15 @@
 import { Cell, Coords } from "./cell.ts"
 
-interface ValueLocations {
+export interface ValueLocations {
     rows: number[]
     columns: number[]
     boxes: number[]
 }
 
-export default class Grid {
+export class Grid {
     static readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    private grid: number[][]
+    public grid: number[][]
+    public filled: number
     readonly givenCells: Cell[]
     readonly DIMENSION: number = Grid.digits.length
     readonly EMPTY_VALUE: number = 0
@@ -20,6 +21,7 @@ export default class Grid {
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
         )
+        this.filled = 0
     }
 
     public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
@@ -59,16 +61,14 @@ export default class Grid {
         return true
     }
 
-    public rowConsistentWithGivenCells(rowIndex: number, row: number[]): boolean {
+    public rowConsistentWithGivenCells(row: number[], rowIndex: number): boolean {
         return this.givenCells.every(cell => 
             (cell.coords.row === rowIndex) === (row[cell.coords.column] === cell.value)
         )
     }
 
     public consistentWithGivenCells(): boolean {
-        return this.givenCells.every(cell =>
-            this.grid[cell.coords.row][cell.coords.column] === cell.value
-        )
+        return this.grid.every((row, rowIndex) => this.rowConsistentWithGivenCells(row, rowIndex))
     }
 
     public rowsValid(): boolean {
