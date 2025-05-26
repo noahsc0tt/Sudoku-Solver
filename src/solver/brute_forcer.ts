@@ -70,5 +70,11 @@ export default class Brute_Forcer {
         return permutations;
     }
 
-    
+    private static partialSolutionValid(partialGrid: Grid): boolean {
+        const cellsSoFar: Cell[] = partialGrid.givenCells
+        partialGrid.grid.forEach((row, rowIndex) => { if (rowIndex<partialGrid.filled){ row.forEach((value, colIndex) => {cellsSoFar.push(new Cell(value, rowIndex, colIndex))})
+            }
+        })
+        return partialGrid.consistentWithGivenCells() && Grid.cellsValid(cellsSoFar)
+    }
 }
