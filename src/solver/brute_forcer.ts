@@ -11,17 +11,10 @@ interface Constraints {
 export default class Brute_Forcer {
 
     static readonly rowPermMap: Map<number, number[]> = new Map()
-    private cellsSoFar: Cell[]
-    private grid: Grid
 
     static {
         Brute_Forcer.getPermutations(Grid.digits).forEach(
         (rowPerm, index) => this.rowPermMap.set(index, rowPerm))
-    }
-
-    constructor(grid: Grid) {
-        this.grid = grid
-        this.cellsSoFar = grid.givenCells
     }
 
     private static getConstraints(grid: Grid): Constraints {
@@ -40,9 +33,7 @@ export default class Brute_Forcer {
         return constraints
     }
 
-
-
-    private getPossibilities(grid: Grid) {
+    private static getPossibilities(grid: Grid) {
         const rowPossibilities: Map<number, number[]> = new Map()
 
         for (let i=0; i<grid.DIMENSION; i++) {
@@ -70,11 +61,25 @@ export default class Brute_Forcer {
         return permutations;
     }
 
-    private static partialSolutionValid(partialGrid: Grid): boolean {
-        const cellsSoFar: Cell[] = partialGrid.givenCells
-        partialGrid.grid.forEach((row, rowIndex) => { if (rowIndex<partialGrid.filled){ row.forEach((value, colIndex) => {cellsSoFar.push(new Cell(value, rowIndex, colIndex))})
+    public static solve(grid: Grid): Grid {
+        let solutionCells: Cell[] = []
+        this.__solve(grid, solutionCells, 0)
+        return new Grid(solutionCells)
+    }
+    
+    private static __solve(grid: Grid, cellsSoFar: Cell[], rowIndex: number): boolean {
+        if (rowIndex>=grid.DIMENSION) return true
+
+        for (const permIndex of Brute_Forcer.getPossibilities(grid).get(rowIndex) || []) {
+            let perm: number[] = Brute_Forcer.rowPermMap.get(permIndex)!
+            let permCells: Cell[] = Grid.createRowCellArray(perm, rowIndex)
+            if (Grid.cellsValid(cellsSoFar.concat(permCells))){
+                permCells.forEach(cell => {cellsSoFar.push(cell)})
+                if (this.__solve(grid, cellsSoFar, rowIndex+1)) return true
+                cellsSoFar.splice(-9, grid.DIMENSION)
             }
-        })
-        return partialGrid.consistentWithGivenCells() && Grid.cellsValid(cellsSoFar)
+            
+        }
+        return false
     }
 }
