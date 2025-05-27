@@ -1,0 +1,67 @@
+import {Grid} from "./Grid.ts"
+import {Cell} from "./Cell.ts"
+import SudokuError from "./SudokuError.ts"
+
+export default class BruteForcer {
+
+    static readonly rowPermMap: Map<number, number[]> = new Map()
+
+    static {
+        BruteForcer.getPermutations(Grid.digits).forEach(
+        (rowPerm, index) => this.rowPermMap.set(index, rowPerm))
+    }
+    
+    private static getPermutations<T>(digits: T[]): T[][] {
+        if (digits.length <= 1) return [digits]
+        const permutations: T[][] = []
+
+        for (let i = 0; i < digits.length; i++) {
+            let digitsCopy = [...digits]
+            let first = digitsCopy.splice(i,1)[0]
+            for (const permutation of this.getPermutations(digitsCopy)) {
+                permutations.push([first, ...permutation])
+            }
+        }
+        return permutations;
+    }
+
+    private static getPossibilities(grid: Grid) {
+        const rowPossibilities: Map<number, number[]> = new Map()
+
+        for (let i=0; i<grid.DIMENSION; i++) {
+            const possibilities: number[] = []
+            BruteForcer.rowPermMap.forEach((rowPerm, key) => {
+                if (grid.rowConsistentWithGivenCells(rowPerm, i))
+                        possibilities.push(key)
+            })
+            rowPossibilities.set(i, possibilities)
+        }
+        return rowPossibilities
+    }
+
+    public static solve(cells: Cell[]): Grid
+    public static solve(grid: Grid): Grid
+    public static solve(gridOrCells: Grid | Cell[]): Grid {
+        const grid = gridOrCells instanceof Grid ? gridOrCells : new Grid(gridOrCells)
+        let solutionCells: Cell[] = []
+        if (!this.__solve(grid, solutionCells, 0, BruteForcer.getPossibilities(grid))) throw new SudokuError("Grid cannot be solved")
+        return new Grid(solutionCells)
+        
+    }
+    
+    private static __solve(grid: Grid, cellsSoFar: Cell[], rowIndex: number, possibilities: Map<number, number[]>): boolean {
+        if (rowIndex>=grid.DIMENSION) return true
+
+        for (const permIndex of possibilities.get(rowIndex) || []) {
+            let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
+            let permCells: Cell[] = Grid.createRowCellArray(perm, rowIndex)
+            if (Grid.cellsValid(cellsSoFar.concat(permCells))){
+                permCells.forEach(cell => {cellsSoFar.push(cell)})
+                if (this.__solve(grid, cellsSoFar, rowIndex+1, possibilities)) return true
+                cellsSoFar.splice(-1*grid.DIMENSION, grid.DIMENSION)
+            }
+            
+        }
+        return false
+    }
+}
