@@ -63,19 +63,19 @@ export default class Brute_Forcer {
 
     public static solve(grid: Grid): Grid {
         let solutionCells: Cell[] = []
-        this.__solve(grid, solutionCells, 0)
+        this.__solve(grid, solutionCells, 0, Brute_Forcer.getPossibilities(grid))
         return new Grid(solutionCells)
     }
     
-    private static __solve(grid: Grid, cellsSoFar: Cell[], rowIndex: number): boolean {
+    private static __solve(grid: Grid, cellsSoFar: Cell[], rowIndex: number, possibilities: Map<number, number[]>): boolean {
         if (rowIndex>=grid.DIMENSION) return true
 
-        for (const permIndex of Brute_Forcer.getPossibilities(grid).get(rowIndex) || []) {
+        for (const permIndex of possibilities.get(rowIndex) || []) {
             let perm: number[] = Brute_Forcer.rowPermMap.get(permIndex)!
             let permCells: Cell[] = Grid.createRowCellArray(perm, rowIndex)
             if (Grid.cellsValid(cellsSoFar.concat(permCells))){
                 permCells.forEach(cell => {cellsSoFar.push(cell)})
-                if (this.__solve(grid, cellsSoFar, rowIndex+1)) return true
+                if (this.__solve(grid, cellsSoFar, rowIndex+1, possibilities)) return true
                 cellsSoFar.splice(-9, grid.DIMENSION)
             }
             
@@ -83,3 +83,21 @@ export default class Brute_Forcer {
         return false
     }
 }
+
+function main() {
+    const givenCells = Grid.createCellArray(
+        [7,0,1], [2,0,4], [4,0,7], [6,0,8], [6,1,1], [8,1,6], [9,1,7],
+        [2,2,0], [8,2,3], [7,2,6], [1,2,7], [5,2,8],
+        [8,3,1], [4,3,2], [9,3,4], [7,3,5],
+        [7,4,0], [1,4,1], [5,4,7], [9,4,8],
+        [1,5,3], [3,5,4], [4,5,6], [8,5,7],
+        [6,6,0], [9,6,1], [7,6,2], [2,6,5], [8,6,8],
+        [5,7,1], [8,7,2], [2,7,6], [6,7,7],
+        [4,8,0], [3,8,1], [8,8,4], [7,8,7]
+    )
+
+    const grid = new Grid(givenCells)
+
+    Brute_Forcer.solve(grid).printGrid()
+}
+main()
