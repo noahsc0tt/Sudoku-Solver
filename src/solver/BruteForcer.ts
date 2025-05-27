@@ -40,14 +40,13 @@ export default class BruteForcer {
         return rowPossibilities
     }
 
-    public static solve(cells: Cell[]): Grid
-    public static solve(grid: Grid): Grid
-    public static solve(gridOrCells: Grid | Cell[]): Grid {
+    public static solve(cells: Cell[]): number[][]
+    public static solve(grid: Grid): number[][]
+    public static solve(gridOrCells: Grid | Cell[]): number[][] {
         const grid = gridOrCells instanceof Grid ? gridOrCells : new Grid(gridOrCells)
         let solutionCells: Cell[] = []
         if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(grid))) throw new SudokuError("Grid cannot be solved")
-        return new Grid(solutionCells)
-        
+        return (new Grid(solutionCells)).grid
     }
     
     private static __solve(cellsSoFar: Cell[], rowIndex: number, possibilities: Map<number, number[]>): boolean {
