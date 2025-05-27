@@ -85,7 +85,7 @@ export default class Brute_Forcer {
 }
 
 function main() {
-    const givenCells = Grid.createCellArray(
+    const solvableCells = Grid.createCellArray(
         [7,0,1], [2,0,4], [4,0,7], [6,0,8], [6,1,1], [8,1,6], [9,1,7],
         [2,2,0], [8,2,3], [7,2,6], [1,2,7], [5,2,8],
         [8,3,1], [4,3,2], [9,3,4], [7,3,5],
@@ -96,8 +96,21 @@ function main() {
         [4,8,0], [3,8,1], [8,8,4], [7,8,7]
     )
 
-    const grid = new Grid(givenCells)
+    const unsolvableCells = Grid.createCellArray(
+        // Row 0
+        [1,0,0], [2,0,1], [3,0,2],
+        // Row 1 
+        [4,1,0], [5,1,1], [6,1,2], 
+        // Row 2
+        [7,2,0], [8,2,1], [9,2,2],
+        // This creates a valid Latin square in the first box
+        // The problem is the placement of these numbers makes
+        // the puzzle impossible to solve
+        [1,0,3], [2,0,6],  // Contradictory constraints
+        [3,3,0], [3,6,0]   // Force 3 in two places in col 0
+    );
 
-    Brute_Forcer.solve(grid).printGrid()
+    Brute_Forcer.solve(new Grid(solvableCells)).printGrid()
+    Brute_Forcer.solve(new Grid(unsolvableCells)).printGrid()
 }
 main()

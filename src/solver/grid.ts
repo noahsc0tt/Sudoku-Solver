@@ -1,4 +1,5 @@
 import { Cell, Coords } from "./cell.ts"
+import SudokuError from "./SudokuError.ts"
 
 export interface ValueLocations {
     rows: number[]
@@ -15,7 +16,7 @@ export class Grid {
     readonly EMPTY_VALUE: number = 0
     
     constructor(cells: Cell[]) {
-        if (!Grid.cellsValid(cells)) throw new Error("Cell inputs violate sudoku rules")
+        if (!Grid.cellsValid(cells)) throw new SudokuError("Cell inputs violate sudoku rules")
         this.givenCells = cells
         this.grid = Array.from({length: this.DIMENSION}, () => Array(this.DIMENSION).fill(this.EMPTY_VALUE))
         cells.forEach(cell =>
