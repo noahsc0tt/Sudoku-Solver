@@ -9,16 +9,16 @@ export interface ValueLocations {
 
 export class Grid {
     static readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    static readonly DIMENSION: number = Grid.digits.length
     public grid: number[][]
     public filled: number
     readonly givenCells: Cell[]
-    readonly DIMENSION: number = Grid.digits.length
     readonly EMPTY_VALUE: number = 0
     
     constructor(cells: Cell[]) {
         if (!Grid.cellsValid(cells)) throw new SudokuError("Cell inputs violate sudoku rules")
         this.givenCells = cells
-        this.grid = Array.from({length: this.DIMENSION}, () => Array(this.DIMENSION).fill(this.EMPTY_VALUE))
+        this.grid = Array.from({length: Grid.DIMENSION}, () => Array(Grid.DIMENSION).fill(this.EMPTY_VALUE))
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
         )
@@ -40,7 +40,7 @@ export class Grid {
     }
 
     public setGrid(grid: number[][]) {
-        if (grid.length !== this.DIMENSION || grid.some(row => row.length !== this.DIMENSION))
+        if (grid.length !== Grid.DIMENSION || grid.some(row => row.length !== Grid.DIMENSION))
             throw new TypeError("Incompatible grid dimensions")
         this.grid = grid
     }
@@ -78,14 +78,14 @@ export class Grid {
 
     public rowsValid(): boolean {
         return this.grid.every(row => {
-            for(let n=1; n<=this.DIMENSION; n++) if (!row.includes(n)) return false
+            for(let n=1; n<=Grid.DIMENSION; n++) if (!row.includes(n)) return false
             return true
         })
     }
     
     public columnsValid(): boolean {
-        for(let col=0; col<this.DIMENSION; col++) {
-            for(let n=1; n<=this.DIMENSION; n++) {
+        for(let col=0; col<Grid.DIMENSION; col++) {
+            for(let n=1; n<=Grid.DIMENSION; n++) {
                 if (!this.grid.some(row => row[col] === n )) return false
             }
         }
@@ -105,7 +105,7 @@ export class Grid {
         })
 
         for (const [_, values] of boxValuesMap.entries())
-            if ((new Set(values)).size !== this.DIMENSION) return false
+            if ((new Set(values)).size !== Grid.DIMENSION) return false
         
         return true
     }

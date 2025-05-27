@@ -5,6 +5,7 @@ import SudokuError from "./SudokuError.ts"
 export default class BruteForcer {
 
     static readonly rowPermMap: Map<number, number[]> = new Map()
+    static readonly DIMENSION = 9
 
     static {
         BruteForcer.getPermutations(Grid.digits).forEach(
@@ -28,7 +29,7 @@ export default class BruteForcer {
     private static getPossibilities(grid: Grid) {
         const rowPossibilities: Map<number, number[]> = new Map()
 
-        for (let i=0; i<grid.DIMENSION; i++) {
+        for (let i=0; i<Grid.DIMENSION; i++) {
             const possibilities: number[] = []
             BruteForcer.rowPermMap.forEach((rowPerm, key) => {
                 if (grid.rowConsistentWithGivenCells(rowPerm, i))
@@ -44,21 +45,21 @@ export default class BruteForcer {
     public static solve(gridOrCells: Grid | Cell[]): Grid {
         const grid = gridOrCells instanceof Grid ? gridOrCells : new Grid(gridOrCells)
         let solutionCells: Cell[] = []
-        if (!this.__solve(grid, solutionCells, 0, BruteForcer.getPossibilities(grid))) throw new SudokuError("Grid cannot be solved")
+        if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(grid))) throw new SudokuError("Grid cannot be solved")
         return new Grid(solutionCells)
         
     }
     
-    private static __solve(grid: Grid, cellsSoFar: Cell[], rowIndex: number, possibilities: Map<number, number[]>): boolean {
-        if (rowIndex>=grid.DIMENSION) return true
+    private static __solve(cellsSoFar: Cell[], rowIndex: number, possibilities: Map<number, number[]>): boolean {
+        if (rowIndex>=Grid.DIMENSION) return true
 
         for (const permIndex of possibilities.get(rowIndex) || []) {
             let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
             let permCells: Cell[] = Grid.createRowCellArray(perm, rowIndex)
             if (Grid.cellsValid(cellsSoFar.concat(permCells))){
                 permCells.forEach(cell => {cellsSoFar.push(cell)})
-                if (this.__solve(grid, cellsSoFar, rowIndex+1, possibilities)) return true
-                cellsSoFar.splice(-1*grid.DIMENSION, grid.DIMENSION)
+                if (this.__solve(cellsSoFar, rowIndex+1, possibilities)) return true
+                cellsSoFar.splice(-1*Grid.DIMENSION, Grid.DIMENSION)
             }
             
         }
