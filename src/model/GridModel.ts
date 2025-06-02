@@ -14,7 +14,8 @@ export class GridModelFactory {
 export class GridModel {
     private valueMap: Map<Coords, number> = new Map()
 
-    public addCell(coords: Coords, value: number) {
+    public setCell(coords: Coords, value: number) {
+        if (value < 1 || value > 9) throw new RangeError("Cell value out of range")
         this.valueMap.set(coords, value)
     }
 
