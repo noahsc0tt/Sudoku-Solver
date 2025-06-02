@@ -10,10 +10,8 @@ export default function Grid() {
         return [...Array(9).fill(null).map(() => Array(9).fill(''))]
     }
 
-    const [grid, setGrid] = useState<string[][]>(
-        getEmptyGrid()
-    )
-    const [solution, setSolution] = useState<number[][] | null>(null);
+    const [grid, setGrid] = useState<string[][]>( getEmptyGrid() )
+    const [solution, setSolution] = useState<number[][] | null>( null )
 
 
     const handleInput = (value: string, row: number, column: number) => {
@@ -37,14 +35,28 @@ export default function Grid() {
     <div className="grid-container">
       {grid.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`} className="grid-row">
-          {row.map((value, colIndex) => (
+          {row.map((cellValue, colIndex) => (
             <input
-              key={`${rowIndex}-${colIndex}`}
               className="sudoku-cell"
               type="text"
               maxLength={1}
-              value={solution ? solution[rowIndex][colIndex].toString() : value}
+              value={cellValue}
               onChange={(e) => handleInput(e.target.value, rowIndex, colIndex)}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+    <div className="grid-container">
+      {grid.map((row, rowIndex) => (
+        <div key={`row-${rowIndex}`} className="grid-row">
+          {row.map((value, colIndex) => (
+            <input
+              className="sudoku-cell"
+              type="text"
+              maxLength={1}
+              value={solution ? solution[rowIndex][colIndex].toString() : ""}
+              readOnly
             />
           ))}
         </div>
