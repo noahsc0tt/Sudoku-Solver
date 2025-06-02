@@ -11,7 +11,7 @@ export default function Grid() {
     }
 
     const [grid, setGrid] = useState<string[][]>( getEmptyGrid() )
-    const [solution, setSolution] = useState<number[][] | null>( null )
+    const [solution, setSolution] = useState<number[][]>( getEmptyGrid() )
 
 
     const handleInput = (value: string, row: number, column: number) => {
@@ -29,6 +29,7 @@ export default function Grid() {
     const clear = () => {
         GridModel.clear()
         setGrid(getEmptyGrid())
+        setSolution(getEmptyGrid())
     }
 
     return (<>
@@ -48,14 +49,14 @@ export default function Grid() {
       ))}
     </div>
     <div className="grid-container">
-      {grid.map((row, rowIndex) => (
+      {solution.map((row, rowIndex) => (
         <div key={`row-${rowIndex}`} className="grid-row">
-          {row.map((value, colIndex) => (
+          {row.map(cellValue => (
             <input
               className="sudoku-cell"
               type="text"
               maxLength={1}
-              value={solution ? solution[rowIndex][colIndex].toString() : ""}
+              value={cellValue.toString()}
               readOnly
             />
           ))}
