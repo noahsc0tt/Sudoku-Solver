@@ -15,11 +15,16 @@ export default function Grid() {
 
 
     const handleInput = (value: string, row: number, column: number) => {
-        const newGrid = [...grid];
-        newGrid[row][column] = value;
-        setGrid(newGrid);
-        GridModel.setCell(new Coords(row, column), parseInt(value))
-}
+      const intValue: number = parseInt(value)
+      if (isNaN(intValue)) {
+        alert("Please enter a number")
+        return
+      }
+      const newGrid = [...grid];
+      newGrid[row][column] = value;
+      setGrid(newGrid);
+      GridModel.setCell(new Coords(row, column), intValue!)
+    }
 
     const solve = () => {
         try { setSolution(GridModel.solve()) }
