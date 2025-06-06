@@ -56,10 +56,6 @@ export default function Grid() {
 
     return (
         <>
-            <Button
-                onClick={() => GridModel.printCells()}
-                label="debug: print grid"
-            />
             <br />
             <div className="grid-container">
                 {inputGrid.map((row, rowIndex) => (
@@ -85,8 +81,8 @@ export default function Grid() {
             </div>
 
             <br />
-            <Button onClick={solve} label={"Solve"} />
             <Button onClick={clear} label={"Clear"} />
+            <Button onClick={solve} label={"Solve"} />
             <br />
             <br />
             <h2>Solution:</h2>
