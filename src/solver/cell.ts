@@ -20,6 +20,10 @@ export class Coords {
         return `${this.row},${this.column}`
     }
 
+    public static fromString(str: string): Coords {
+        return new Coords(parseInt(str[0]), parseInt(str[2]))
+    }
+
     public static getBox(coords: Coords): number
     public static getBox(row: number, column: number): number
     public static getBox(
