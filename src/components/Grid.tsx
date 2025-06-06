@@ -1,76 +1,111 @@
-import { useState } from 'react'
-import Button from './Button'
-import GridModel from '../model/GridModel'
-import { Coords } from '../solver/Cell'
-import '../stylesheets/styles.css'
+import { useState } from "react"
+import Button from "./Button"
+import GridModel from "../model/GridModel"
+import { Coords } from "../solver/Cell"
+import "../stylesheets/styles.css"
 
 export default function Grid() {
-
-    const getEmptyGrid = () => { 
-        return [...Array(9).fill(null).map(() => Array(9).fill(''))]
+    const getEmptyGrid = () => {
+        return [
+            ...Array(9)
+                .fill(null)
+                .map(() => Array(9).fill("")),
+        ]
     }
 
-    const [grid, setGrid] = useState<string[][]>( getEmptyGrid() )
-    const [solution, setSolution] = useState<number[][]>( getEmptyGrid() )
+    const [inputGrid, setInputGrid] = useState<string[][]>(getEmptyGrid())
+    const [outputGrid, setOutputGrid] = useState<number[][]>(getEmptyGrid())
 
+    const updateInputGrid = (value: string, row: number, column: number) => {
+        // making a new copy of the grid and applying the change (so state is updated)
+        const newGrid = [...inputGrid]
+        newGrid[row][column] = value
+        setInputGrid(newGrid)
+    }
 
     const handleInput = (value: string, row: number, column: number) => {
-      const intValue: number = parseInt(value)
-      if (isNaN(intValue)) {
-        alert("Please enter a number")
-        return
-      }
-      const newGrid = [...grid];
-      newGrid[row][column] = value;
-      setGrid(newGrid);
-      GridModel.setCell(new Coords(row, column), intValue!)
+        const intValue: number = parseInt(value)
+        const coords = new Coords(row, column)
+
+        if (value === "") {
+            GridModel.removeCell(coords)
+            updateInputGrid(value, row, column)
+        }
+        else if (isNaN(intValue)) {
+            alert("Please enter a number")
+        }
+        else {
+            GridModel.setCell(coords, intValue)
+            updateInputGrid(value, row, column)
+        }
     }
 
     const solve = () => {
-        try { setSolution(GridModel.solve()) }
-        catch (error) {alert((error as Error).message)}
+        try {
+            setOutputGrid(GridModel.solve())
+        } catch (error) {
+            alert((error as Error).message)
+        }
     }
 
     const clear = () => {
         GridModel.clear()
-        setGrid(getEmptyGrid())
-        setSolution(getEmptyGrid())
+        setInputGrid(getEmptyGrid())
+        setOutputGrid(getEmptyGrid())
     }
 
-    return (<>
-    <div className="grid-container">
-      {grid.map((row, rowIndex) => (
-        <div key={`row-${rowIndex}`} className="grid-row">
-          {row.map((cellValue, colIndex) => (
-            <input
-              className="sudoku-cell"
-              type="text"
-              maxLength={1}
-              value={cellValue}
-              onChange={(e) => handleInput(e.target.value, rowIndex, colIndex)}
+    return (
+        <>
+            <Button
+                onClick={() => GridModel.printCells()}
+                label="debug: print grid"
             />
-          ))}
-        </div>
-      ))}
-    </div>
-    <div className="grid-container">
-      {solution.map((row, rowIndex) => (
-        <div key={`row-${rowIndex}`} className="grid-row">
-          {row.map(cellValue => (
-            <input
-              className="sudoku-cell"
-              type="text"
-              maxLength={1}
-              value={cellValue.toString()}
-              readOnly
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-    <br/><br/>
-    <Button onClick={solve} label={"Solve"}/>
-    <br/>
-    <Button onClick={clear} label={"Clear"}/>
-    </>)
+            <br />
+            <div className="grid-container">
+                {inputGrid.map((row, rowIndex) => (
+                    <div key={`row-${rowIndex}`} className="grid-row">
+                        {row.map((cellValue, colIndex) => (
+                            <input
+                                key={`solution-${rowIndex}-${colIndex}`}
+                                className="sudoku-cell"
+                                type="text"
+                                maxLength={1}
+                                value={cellValue}
+                                onChange={(e) =>
+                                    handleInput(
+                                        e.target.value,
+                                        rowIndex,
+                                        colIndex
+                                    )
+                                }
+                            />
+                        ))}
+                    </div>
+                ))}
+            </div>
+
+            <br />
+            <Button onClick={solve} label={"Solve"} />
+            <Button onClick={clear} label={"Clear"} />
+            <br />
+            <br />
+            <h2>Solution:</h2>
+            <div className="grid-container">
+                {outputGrid.map((row, rowIndex) => (
+                    <div key={`row-${rowIndex}`} className="grid-row">
+                        {row.map((cellValue, colIndex) => (
+                            <input
+                                key={`solution-${rowIndex}-${colIndex}`}
+                                className="sudoku-cell"
+                                type="text"
+                                maxLength={1}
+                                value={cellValue.toString()}
+                                readOnly
+                            />
+                        ))}
+                    </div>
+                ))}
+            </div>
+        </>
+    )
 }
