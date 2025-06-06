@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Button from "./Button"
-import GridModel from "../model/GridModel"
-import { Coords } from "../solver/Cell"
+import Controller from "../model/Controller"
+import Coords from "../solver/Coords"
 import "../stylesheets/styles.css"
 
 export default function Grid() {
@@ -28,28 +28,28 @@ export default function Grid() {
         const coords = new Coords(row, column)
 
         if (value === "") {
-            GridModel.removeCell(coords)
+            Controller.removeCell(coords)
             updateInputGrid(value, row, column)
         }
         else if (isNaN(intValue)) {
             alert("Please enter a number")
         }
         else {
-            GridModel.setCell(coords, intValue)
+            Controller.setCell(coords, intValue)
             updateInputGrid(value, row, column)
         }
     }
 
     const solve = () => {
         try {
-            setOutputGrid(GridModel.solve())
+            setOutputGrid(Controller.solve())
         } catch (error) {
             alert((error as Error).message)
         }
     }
 
     const clear = () => {
-        GridModel.clear()
+        Controller.clear()
         setInputGrid(getEmptyGrid())
         setOutputGrid(getEmptyGrid())
     }

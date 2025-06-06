@@ -1,4 +1,5 @@
-import { Cell, Coords } from "./Cell.ts"
+import Cell from "./Cell.ts"
+import Coords from "./Coords.ts"
 import SudokuError from "./SudokuError.ts"
 
 export interface ValueLocations {

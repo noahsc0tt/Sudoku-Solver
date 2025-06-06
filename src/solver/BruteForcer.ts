@@ -1,5 +1,5 @@
 import { Grid } from "./Grid.ts"
-import { Cell } from "./Cell.ts"
+import Cell from "./Cell.ts"
 import SudokuError from "./SudokuError.ts"
 
 export default class BruteForcer {

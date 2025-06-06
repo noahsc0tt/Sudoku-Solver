@@ -1,17 +1,18 @@
-import { Cell, Coords } from "../solver/Cell"
+import Cell from "../solver/Cell"
+import Coords from "../solver/Coords"
 import BruteForcer from "../solver/BruteForcer"
 
-export class GridModelFactory {
-    static instance: GridModel | null = null
+export class ControllerFactory {
+    static instance: Controller | null = null
 
-    public static getInstance(): GridModel {
-        if (GridModelFactory.instance === null)
-            GridModelFactory.instance = new GridModel()
-        return GridModelFactory.instance
+    public static getInstance(): Controller {
+        if (ControllerFactory.instance === null)
+            ControllerFactory.instance = new Controller()
+        return ControllerFactory.instance
     }
 }
 
-export class GridModel {
+export class Controller {
     private valueMap: Map<string, number> = new Map()
 
     public setCell(coords: Coords, value: number) {
@@ -44,4 +45,4 @@ export class GridModel {
     }
 }
 
-export default GridModelFactory.getInstance()
+export default ControllerFactory.getInstance()
