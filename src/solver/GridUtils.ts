@@ -18,7 +18,7 @@ export default class GridUtils {
         )
     }
 
-    public static cellsValid(cells: Cell[]): boolean {
+    public static populateValueLocationsMap(cells: Cell[]): Map<number, ValueLocations> {
         const valueLocationsMap: Map<number, ValueLocations> = new Map()
         let sameValueLocations: ValueLocations
 
@@ -34,6 +34,11 @@ export default class GridUtils {
             sameValueLocations.columns.push(cell.coords.column)
             sameValueLocations.boxes.push(Coords.getBox(cell.coords))
         })
+        return valueLocationsMap
+    }
+
+    public static cellsValid(cells: Cell[]): boolean {
+        const valueLocationsMap: Map<number, ValueLocations> = GridUtils.populateValueLocationsMap(cells)
 
         for (const [_, locations] of valueLocationsMap.entries()) {
             if (
@@ -61,13 +66,17 @@ export default class GridUtils {
             throw new SudokuError("Cell inputs violate sudoku rules")
         if (cells.length !== GridUtils.DIMENSION*GridUtils.DIMENSION)
             throw new TypeError("Not enough cells provided")
-            
+        
+        return GridUtils.populateGrid(cells)
+    }
+
+    public static populateGrid(cells: Cell[]): number[][] {
         const grid: number[][] = Array.from({ length: GridUtils.DIMENSION }, () =>
             Array(GridUtils.DIMENSION).fill(-1)
         )
         cells.forEach(
             cell => {
-                    if (grid[cell.coords.row][cell.coords.column] !== -1)
+                    if (grid[cell.coords.row][cell.coords.column] !== -1) // value for cell already given
                         throw new SudokuError("Conflicting cell values given")
                     grid[cell.coords.row][cell.coords.column] = cell.value
             }
