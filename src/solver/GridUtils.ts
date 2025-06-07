@@ -29,4 +29,12 @@ export default class GridUtils {
         }
         return true
     }
+
+    public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
+        return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
+    }
+
+    public static createRowCellArray(row: number[], rowIndex: number): Cell[] {
+        return row.map((val, colIndex) => new Cell(val, rowIndex, colIndex))
+    }
 }

@@ -21,25 +21,13 @@ export default class Coords {
     }
 
     public static fromString(str: string): Coords {
-        return new Coords(parseInt(str[0]), parseInt(str[2]))
+        let [row, column] = str.split(',').map(Number)
+        return new Coords(row, column)
     }
 
-    public static getBox(coords: Coords): number
-    public static getBox(row: number, column: number): number
-    public static getBox(
-        coordsOrRow: Coords | number,
-        column?: number
-    ): number {
-        let row: number
-
-        if (coordsOrRow instanceof Coords) {
-            column = coordsOrRow.column
-            row = coordsOrRow.row
-        } else row = coordsOrRow
-
-        const boxColumn: number = Math.floor(column! / this.BOX_DIMENSION)
-        const boxRow: number = Math.floor(row / this.BOX_DIMENSION)
-
+    public static getBox(coords: Coords): number {
+        const boxColumn: number = Math.floor(coords.column! / this.BOX_DIMENSION)
+        const boxRow: number = Math.floor(coords.row / this.BOX_DIMENSION)
         return boxColumn + 3 * boxRow
     }
 }

@@ -6,7 +6,6 @@ export class Grid {
     static readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     static readonly DIMENSION: number = Grid.digits.length
     public grid: number[][]
-    public filled: number
     readonly givenCells: Cell[]
     readonly EMPTY_VALUE: number = 0
     
@@ -17,7 +16,6 @@ export class Grid {
         cells.forEach(cell =>
             this.grid[cell.coords.row][cell.coords.column] = cell.value 
         )
-        this.filled = 0
     }
 
     public rowConsistentWithGivenCells(row: number[], rowIndex: number): boolean {
