@@ -1,4 +1,3 @@
-import { Grid } from "./Grid.ts"
 import Cell from "./Cell.ts"
 import GridUtils from "./GridUtils.ts"
 import SudokuError from "./SudokuError.ts"
@@ -8,7 +7,7 @@ export default class BruteForcer {
     static readonly DIMENSION = 9
 
     static {
-        BruteForcer.getPermutations(Grid.digits).forEach((rowPerm, index) =>
+        BruteForcer.getPermutations(GridUtils.digits).forEach((rowPerm, index) =>
             this.rowPermMap.set(index, rowPerm)
         )
     }
@@ -27,13 +26,13 @@ export default class BruteForcer {
         return permutations
     }
 
-    private static getPossibilities(grid: Grid) {
+    private static getPossibilities(givenCells: Cell[]): Map<number, number[]> {
         const rowPossibilities: Map<number, number[]> = new Map()
 
-        for (let i = 0; i < Grid.DIMENSION; i++) {
+        for (let i = 0; i < GridUtils.DIMENSION; i++) {
             const possibilities: number[] = []
             BruteForcer.rowPermMap.forEach((rowPerm, key) => {
-                if (grid.rowConsistentWithGivenCells(rowPerm, i))
+                if (GridUtils.rowConsistentWithCells(rowPerm, i, givenCells))
                     possibilities.push(key)
             })
             rowPossibilities.set(i, possibilities)
@@ -41,12 +40,11 @@ export default class BruteForcer {
         return rowPossibilities
     }
 
-    public static solve(cells: Cell[]): number[][] {
-        const grid: Grid = new Grid(cells)
-        let solutionCells: Cell[] = []
-        if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(grid)))
+    public static solve(givenCells: Cell[]): number[][] {
+        const solutionCells: Cell[] = []
+        if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(givenCells)))
             throw new SudokuError("Grid cannot be solved")
-        return new Grid(solutionCells).grid
+        return GridUtils.createGrid(solutionCells)
     }
 
     private static __solve(
@@ -54,7 +52,7 @@ export default class BruteForcer {
         rowIndex: number,
         possibilities: Map<number, number[]>
     ): boolean {
-        if (rowIndex >= Grid.DIMENSION) return true
+        if (rowIndex >= GridUtils.DIMENSION) return true
 
         for (const permIndex of possibilities.get(rowIndex) || []) {
             let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
@@ -65,7 +63,7 @@ export default class BruteForcer {
                 })
                 if (this.__solve(cellsSoFar, rowIndex + 1, possibilities))
                     return true
-                cellsSoFar.splice(-1 * Grid.DIMENSION, Grid.DIMENSION)
+                cellsSoFar.splice(-1 * GridUtils.DIMENSION, GridUtils.DIMENSION)
             }
         }
         return false
