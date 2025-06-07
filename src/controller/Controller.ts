@@ -1,6 +1,8 @@
 import Cell from "../solver/Cell"
 import Coords from "../solver/Coords"
 import BruteForcer from "../solver/BruteForcer"
+import GridUtils from "../solver/GridUtils"
+import SudokuError from "../solver/SudokuError"
 
 // Factory MVC controller class, implementing the singleton pattern
 export class ControllerFactory {
@@ -31,14 +33,9 @@ export class Controller {
         this.valueMap.forEach((value, coords) => {
             cellArray.push(new Cell(value, Coords.fromString(coords)))
         })
+        if (!GridUtils.cellsValid(cellArray))
+            throw new SudokuError("Cells violate sudoku rules")
         return BruteForcer.solve(cellArray)
-    }
-
-    public printCells(): void {
-        console.log("Cells:")
-        this.valueMap.forEach((value, coords) =>
-            console.log(`(${coords}): ${value}`)
-        )
     }
 
     public clear(): void {
