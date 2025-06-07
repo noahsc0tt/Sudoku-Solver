@@ -60,7 +60,7 @@ export default class BruteForcer {
 
         for (const permIndex of possibilities.get(rowIndex) || []) {
             let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
-            let permCells: Cell[] = Grid.createRowCellArray(perm, rowIndex)
+            let permCells: Cell[] = Cell.createRowCellArray(perm, rowIndex)
             if (Grid.cellsValid(cellsSoFar.concat(permCells))) {
                 permCells.forEach((cell) => {
                     cellsSoFar.push(cell)

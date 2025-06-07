@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Button from "./Button"
-import Controller from "../model/Controller"
+import Controller from "../controller/Controller"
 import Coords from "../solver/Coords"
 import "../stylesheets/styles.css"
 

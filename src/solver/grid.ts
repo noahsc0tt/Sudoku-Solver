@@ -26,14 +26,6 @@ export class Grid {
         this.filled = 0
     }
 
-    public static createCellArray(...cellInputs: [number, number, number][]): Cell[] {
-        return cellInputs.map(([val, row, col]) => new Cell(val, row, col))
-    }
-
-    public static createRowCellArray(row: number[], rowIndex: number): Cell[] {
-        return row.map((val, colIndex) => new Cell(val, rowIndex, colIndex))
-    }
-
     public setRow(rowIndex: number, row: number[]) {
         if (rowIndex < 0 || rowIndex >= this.grid.length)
             throw new RangeError("Row index out of range")
@@ -110,7 +102,6 @@ export class Grid {
         
         return true
     }
-
     
     public isValid(): boolean { 
         return this.columnsValid() && this.rowsValid() && this.boxesValid() 

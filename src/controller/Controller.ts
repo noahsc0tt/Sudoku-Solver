@@ -2,6 +2,7 @@ import Cell from "../solver/Cell"
 import Coords from "../solver/Coords"
 import BruteForcer from "../solver/BruteForcer"
 
+// Factory MVC controller class, implementing the singleton pattern
 export class ControllerFactory {
     static instance: Controller | null = null
 
