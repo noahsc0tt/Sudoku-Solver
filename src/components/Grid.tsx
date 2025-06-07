@@ -3,6 +3,7 @@ import Button from "./Button"
 import Controller from "../controller/Controller"
 import Coords from "../solver/Coords"
 import "../stylesheets/styles.css"
+import SudokuError from "../solver/SudokuError"
 
 export default function Grid() {
     const getEmptyGrid = () => {
@@ -35,8 +36,12 @@ export default function Grid() {
             alert("Please enter a number")
         }
         else {
-            Controller.setCell(coords, intValue)
-            updateInputGrid(value, row, column)
+            try {
+                Controller.setCell(coords, intValue)
+                updateInputGrid(value, row, column)
+            } catch (error) {
+                alert((error as SudokuError).message)
+            }
         }
     }
 
