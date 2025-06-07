@@ -1,5 +1,6 @@
 import { Grid } from "./Grid.ts"
 import Cell from "./Cell.ts"
+import GridUtils from "./GridUtils.ts"
 import SudokuError from "./SudokuError.ts"
 
 export default class BruteForcer {
@@ -40,11 +41,8 @@ export default class BruteForcer {
         return rowPossibilities
     }
 
-    public static solve(cells: Cell[]): number[][]
-    public static solve(grid: Grid): number[][]
-    public static solve(gridOrCells: Grid | Cell[]): number[][] {
-        const grid: Grid =
-            gridOrCells instanceof Grid ? gridOrCells : new Grid(gridOrCells)
+    public static solve(cells: Cell[]): number[][] {
+        const grid: Grid = new Grid(cells)
         let solutionCells: Cell[] = []
         if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(grid)))
             throw new SudokuError("Grid cannot be solved")
@@ -61,7 +59,7 @@ export default class BruteForcer {
         for (const permIndex of possibilities.get(rowIndex) || []) {
             let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
             let permCells: Cell[] = Cell.createRowCellArray(perm, rowIndex)
-            if (Grid.cellsValid(cellsSoFar.concat(permCells))) {
+            if (GridUtils.cellsValid(cellsSoFar.concat(permCells))) {
                 permCells.forEach((cell) => {
                     cellsSoFar.push(cell)
                 })
