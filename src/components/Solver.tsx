@@ -49,7 +49,7 @@ export default function Grid() {
                                 className="sudoku-cell"
                                 type="text"
                                 maxLength={1}
-                                value={cellValue.toString()}
+                                value={cellValue === 0 ? "" : cellValue.toString()}
                                 readOnly
                             />
                         ))}
