@@ -16,12 +16,16 @@ export class ControllerFactory {
 }
 
 export class Controller {
+    // cells are stored in a map with string representation of coords as key (to avoid Coords object reference comparisons)
     private valueMap: Map<string, number> = new Map()
 
     public setCell(coords: Coords, value: number) {
-        if (value < 1 || value > 9)
+        if (isNaN(value)) 
+            throw new TypeError("Please enter a number")
+        else if (value < 1 || value > 9)
             throw new RangeError("Cell value out of range")
-        this.valueMap.set(coords.toString(), value)
+        else 
+            this.valueMap.set(coords.toString(), value)
     }
 
     public removeCell(coords: Coords): boolean {

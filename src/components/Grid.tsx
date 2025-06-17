@@ -17,20 +17,17 @@ const handleInput = (
     row: number,
     column: number
 ) => {
-    const intValue: number = parseInt(value)
     const coords = new Coords(row, column)
 
     if (value === "") {
         Controller.removeCell(coords)
         updateInputGrid(inputGrid, setInputGrid, value, row, column)
-    } else if (isNaN(intValue)) {
-        alert("Please enter a number")
     } else {
         try {
-            Controller.setCell(coords, intValue)
+            Controller.setCell(coords, parseInt(value))
             updateInputGrid(inputGrid, setInputGrid, value, row, column)
         } catch (error) {
-            alert((error as SudokuError).message)
+            alert((error as Error).message)
         }
     }
 }
