@@ -1,6 +1,4 @@
-import Coords from "../solver/Coords"
 import Controller from "../controller/Controller"
-import SudokuError from "../solver/SudokuError"
 import { useState } from "react"
 
 const getEmptyInputGrid = () => {
@@ -19,33 +17,12 @@ const getEmptyOutputGrid = () => {
     ]
 }
 
-const updateInputGrid = (inputGrid: string[][], setInputGrid: Function,value: string, row: number, column: number) => {
+export const updateInputGrid = (inputGrid: string[][], setInputGrid: Function,value: string, row: number, column: number) => {
         // making a new copy of the grid and applying the change (so state is updated)
         const newGrid = [...inputGrid]
         newGrid[row][column] = value
         setInputGrid(newGrid)
     }
-
-export const handleInput = (inputGrid: string[][], setInputGrid, value: string, row: number, column: number) => {
-    const intValue: number = parseInt(value)
-    const coords = new Coords(row, column)
-
-    if (value === "") {
-        Controller.removeCell(coords)
-        updateInputGrid(inputGrid, setInputGrid, value, row, column)
-    }
-    else if (isNaN(intValue)) {
-        alert("Please enter a number")
-    }
-    else {
-        try {
-            Controller.setCell(coords, intValue)
-            updateInputGrid(inputGrid, setInputGrid, value, row, column)
-        } catch (error) {
-            alert((error as SudokuError).message)
-        }
-    }
-}
 
 export const solve = (setOutputGrid) => {
     try { setOutputGrid(Controller.solve()) } 

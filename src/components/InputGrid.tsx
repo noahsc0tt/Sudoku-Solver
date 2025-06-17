@@ -1,31 +1,55 @@
 import "../stylesheets/styles.css"
-import { handleInput } from "./GridUtils"
+import Coords from "../solver/Coords"
+import Controller from "../controller/Controller"
+import SudokuError from "../solver/SudokuError"
+import { updateInputGrid } from "./GridUtils"
 
 type InputCellProps = {
-    val: string
+    value: string
     row: number
     col: number
     handler: (value: string, row: number, col: number) => void
 }
 
-type InputGridProps = {
+type GridProps = {
     grid: string[][]
     setter: Function
 }
 
-function InputCell({ val, row, col, handler }: InputCellProps) {
+const handleInput = (inputGrid: string[][], setInputGrid, value: string, row: number, column: number) => {
+    const intValue: number = parseInt(value)
+    const coords = new Coords(row, column)
+
+    if (value === "") {
+        Controller.removeCell(coords)
+        updateInputGrid(inputGrid, setInputGrid, value, row, column)
+    }
+    else if (isNaN(intValue)) {
+        alert("Please enter a number")
+    }
+    else {
+        try {
+            Controller.setCell(coords, intValue)
+            updateInputGrid(inputGrid, setInputGrid, value, row, column)
+        } catch (error) {
+            alert((error as SudokuError).message)
+        }
+    }
+}
+
+function InputCell({ value, row, col, handler }: InputCellProps) {
     return (
         <input
             className="sudoku-cell"
             type="text"
             maxLength={1}
-            value={val}
+            value={value}
             onChange={(e) => handler(e.target.value, row, col)}
         />
     )
 }
 
-export default function InputGrid({ grid, setter }: InputGridProps) {
+export default function InputGrid({ grid, setter }: GridProps) {
     const onCellChange = (value: string, row: number, col: number) => {
         handleInput(grid, setter, value, row, col)
     }
@@ -37,7 +61,7 @@ export default function InputGrid({ grid, setter }: InputGridProps) {
                     {row.map((cellValue, colIndex) => (
                         <InputCell
                             key={`cell-${rowIndex}-${colIndex}`}
-                            val={cellValue}
+                            value={cellValue}
                             row={rowIndex}
                             col={colIndex}
                             handler={onCellChange}

@@ -18,7 +18,7 @@ export default function Grid() {
             <br />
             <br />
             <h2>Solution:</h2>
-            <OutputGrid grid={outputGrid} setter={setOutputGrid}/>
+            <OutputGrid grid={outputGrid}/>
         </>
     )
 }
