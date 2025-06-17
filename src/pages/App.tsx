@@ -1,11 +1,11 @@
-import GridComponent from "../components/Grid"
+import Solver from "../components/Solver"
 
 function App() {
     return (
         <>
             <h1>Sudoku Solver</h1>
             <div>
-                <GridComponent />
+                <Solver />
             </div>
         </>
     )

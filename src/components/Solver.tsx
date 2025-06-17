@@ -1,63 +1,10 @@
-import { useState } from "react"
 import Button from "./Button"
-import Controller from "../controller/Controller"
-import Coords from "../solver/Coords"
+import { clear, solve, handleInput, useGridHook } from "./GridUtils"
 import "../stylesheets/styles.css"
-import SudokuError from "../solver/SudokuError"
+
 
 export default function Grid() {
-    const getEmptyGrid = () => {
-        return [
-            ...Array(9)
-                .fill(null)
-                .map(() => Array(9).fill("")),
-        ]
-    }
-
-    const [inputGrid, setInputGrid] = useState<string[][]>(getEmptyGrid())
-    const [outputGrid, setOutputGrid] = useState<number[][]>(getEmptyGrid())
-
-    const updateInputGrid = (value: string, row: number, column: number) => {
-        // making a new copy of the grid and applying the change (so state is updated)
-        const newGrid = [...inputGrid]
-        newGrid[row][column] = value
-        setInputGrid(newGrid)
-    }
-
-    const handleInput = (value: string, row: number, column: number) => {
-        const intValue: number = parseInt(value)
-        const coords = new Coords(row, column)
-
-        if (value === "") {
-            Controller.removeCell(coords)
-            updateInputGrid(value, row, column)
-        }
-        else if (isNaN(intValue)) {
-            alert("Please enter a number")
-        }
-        else {
-            try {
-                Controller.setCell(coords, intValue)
-                updateInputGrid(value, row, column)
-            } catch (error) {
-                alert((error as SudokuError).message)
-            }
-        }
-    }
-
-    const solve = () => {
-        try {
-            setOutputGrid(Controller.solve())
-        } catch (error) {
-            alert((error as Error).message)
-        }
-    }
-
-    const clear = () => {
-        Controller.clear()
-        setInputGrid(getEmptyGrid())
-        setOutputGrid(getEmptyGrid())
-    }
+    const [[inputGrid, setInputGrid], [outputGrid, setOutputGrid]] = useGridHook()
 
     return (
         <>
@@ -74,6 +21,8 @@ export default function Grid() {
                                 value={cellValue}
                                 onChange={(e) =>
                                     handleInput(
+                                        inputGrid,
+                                        setInputGrid,
                                         e.target.value,
                                         rowIndex,
                                         colIndex
@@ -86,8 +35,8 @@ export default function Grid() {
             </div>
 
             <br />
-            <Button onClick={clear} label={"Clear"} />
-            <Button onClick={solve} label={"Solve"} />
+            <Button onClick={() => clear(setInputGrid, setOutputGrid)} label={"Clear"}/>
+            <Button onClick={() => solve(setOutputGrid)} label={"Solve"}/>
             <br />
             <br />
             <h2>Solution:</h2>
