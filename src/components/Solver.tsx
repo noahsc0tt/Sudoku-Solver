@@ -1,24 +1,24 @@
 import Button from "./Button"
 import { clear, solve, useGridHook } from "./GridUtils"
 import "../stylesheets/styles.css"
-import InputGrid from "./InputGrid"
-import OutputGrid from "./OutputGrid"
+import Grid from "./Grid"
 
 
-export default function Grid() {
+
+export default function Solver() {
     const [[inputGrid, setInputGrid], [outputGrid, setOutputGrid]] = useGridHook()
 
     return (
         <>
             <br />
-            <InputGrid grid={inputGrid} setter={setInputGrid} />
+            <Grid grid={inputGrid} setter={setInputGrid} />
             <br />
             <Button onClick={() => clear(setInputGrid, setOutputGrid)} label={"Clear"}/>
             <Button onClick={() => solve(setOutputGrid)} label={"Solve"}/>
             <br />
             <br />
             <h2>Solution:</h2>
-            <OutputGrid grid={outputGrid}/>
+            <Grid grid={outputGrid} setter={setOutputGrid}/>
         </>
     )
 }
