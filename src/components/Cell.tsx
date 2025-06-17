@@ -1,6 +1,5 @@
 import "../stylesheets/styles.css"
 
-
 type InputCellProps = {
     value: string
     row: number

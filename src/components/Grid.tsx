@@ -1,7 +1,6 @@
 import "../stylesheets/styles.css"
 import Coords from "../solver/Coords"
 import Controller from "../controller/Controller"
-import SudokuError from "../solver/SudokuError"
 import { updateInputGrid } from "./GridUtils"
 import { InputCell, OutputCell } from "./Cell"
 
@@ -32,39 +31,44 @@ const handleInput = (
     }
 }
 
+const getCellComponent = (
+    grid: string[][] | number[][],
+    setter: Function,
+    value: string | number,
+    row: number,
+    col: number
+) => {
+    if (typeof grid[0]?.[0] === "string") {
+        return (
+            <InputCell
+                key={`cell-${row}-${col}`}
+                value={value as string}
+                row={row}
+                col={col}
+                onCellChange={(value) =>
+                    handleInput(grid as string[][], setter, value, row, col)
+                }
+            />
+        )
+    } else {
+        return <OutputCell key={`cell-${row}-${col}`} value={value as number} />
+    }
+}
+
 export default function Grid({ grid, setter }: GridProps) {
     return (
         <div className="grid-container">
             {grid.map((row, rowIndex) => (
                 <div key={`row-${rowIndex}`} className="grid-row">
-                    {row.map((cellValue, colIndex) => {
-                        if (typeof grid[0]?.[0] === "string") {
-                            return (
-                                <InputCell
-                                    key={`cell-${rowIndex}-${colIndex}`}
-                                    value={cellValue as string}
-                                    row={rowIndex}
-                                    col={colIndex}
-                                    onCellChange={(value) =>
-                                        handleInput(
-                                            grid as string[][],
-                                            setter,
-                                            value,
-                                            rowIndex,
-                                            colIndex
-                                        )
-                                    }
-                                />
-                            )
-                        } else {
-                            return (
-                                <OutputCell
-                                    key={`cell-${rowIndex}-${colIndex}`}
-                                    value={cellValue}
-                                />
-                            )
-                        }
-                    })}
+                    {row.map((value, colIndex) =>
+                        getCellComponent(
+                            grid,
+                            setter,
+                            value,
+                            rowIndex,
+                            colIndex
+                        )
+                    )}
                 </div>
             ))}
         </div>
