@@ -16,7 +16,6 @@ type InputGridProps = {
 function InputCell({ val, row, col, handler }: InputCellProps) {
     return (
         <input
-            key={`solution-${row}-${col}`}
             className="sudoku-cell"
             type="text"
             maxLength={1}
@@ -37,6 +36,7 @@ export default function InputGrid({ grid, setter }: InputGridProps) {
                 <div key={`row-${rowIndex}`} className="grid-row">
                     {row.map((cellValue, colIndex) => (
                         <InputCell
+                            key={`cell-${rowIndex}-${colIndex}`}
                             val={cellValue}
                             row={rowIndex}
                             col={colIndex}

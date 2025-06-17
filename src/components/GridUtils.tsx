@@ -48,11 +48,8 @@ export const handleInput = (inputGrid: string[][], setInputGrid, value: string, 
 }
 
 export const solve = (setOutputGrid) => {
-    try {
-        setOutputGrid(Controller.solve())
-    } catch (error) {
-        alert((error as Error).message)
-    }
+    try { setOutputGrid(Controller.solve()) } 
+    catch (error) { alert((error as Error).message) }
 }
 
 export const clear = (setInputGrid: Function, setOutputGrid) => {
