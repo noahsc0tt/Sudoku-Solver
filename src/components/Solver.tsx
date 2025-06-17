@@ -1,6 +1,7 @@
 import Button from "./Button"
 import { clear, solve, handleInput, useGridHook } from "./GridUtils"
 import "../stylesheets/styles.css"
+import InputGrid from "./InputGrid"
 
 
 export default function Grid() {
@@ -9,30 +10,8 @@ export default function Grid() {
     return (
         <>
             <br />
-            <div className="grid-container">
-                {inputGrid.map((row, rowIndex) => (
-                    <div key={`row-${rowIndex}`} className="grid-row">
-                        {row.map((cellValue, colIndex) => (
-                            <input
-                                key={`solution-${rowIndex}-${colIndex}`}
-                                className="sudoku-cell"
-                                type="text"
-                                maxLength={1}
-                                value={cellValue}
-                                onChange={(e) =>
-                                    handleInput(
-                                        inputGrid,
-                                        setInputGrid,
-                                        e.target.value,
-                                        rowIndex,
-                                        colIndex
-                                    )
-                                }
-                            />
-                        ))}
-                    </div>
-                ))}
-            </div>
+            
+            <InputGrid grid={inputGrid} setter={setInputGrid} />
 
             <br />
             <Button onClick={() => clear(setInputGrid, setOutputGrid)} label={"Clear"}/>
