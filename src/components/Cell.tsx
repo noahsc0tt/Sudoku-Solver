@@ -1,6 +1,6 @@
 import "../stylesheets/styles.css"
 
-const baseCell = {
+const baseCellProps = {
     className: "sudoku-cell",
     type: "text",
     maxLength: 1
@@ -16,7 +16,7 @@ type InputCellProps = {
 export function InputCell({ value, row, col, onCellChange }: InputCellProps) {
     return (
         <input
-            {...baseCell}
+            {...baseCellProps}
             value={value}
             onChange={(e) => onCellChange(e.target.value, row, col)}
         />
@@ -26,7 +26,7 @@ export function InputCell({ value, row, col, onCellChange }: InputCellProps) {
 export function OutputCell({value}: {value: number}) {
     return (
         <input
-            {...baseCell}
+            {...baseCellProps}
             value={value === 0 ? "" : value.toString()}
             readOnly
         />

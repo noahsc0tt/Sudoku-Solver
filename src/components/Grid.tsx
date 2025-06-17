@@ -1,12 +1,12 @@
 import "../stylesheets/styles.css"
 import Coords from "../solver/Coords"
 import Controller from "../controller/Controller"
-import { updateInputGrid } from "./GridUtils"
+import { updateInputGrid } from "./ViewUtils"
 import { InputCell, OutputCell } from "./Cell"
 
 type GridProps = {
     grid: string[][] | number[][]
-    setter: Function
+    setter?: Function
 }
 
 const handleInput = (
@@ -32,13 +32,12 @@ const handleInput = (
 }
 
 const getCellComponent = (
-    grid: string[][] | number[][],
-    setter: Function,
+    gridProps: GridProps,
     value: string | number,
     row: number,
     col: number
 ) => {
-    if (typeof grid[0]?.[0] === "string")
+    if (typeof gridProps.grid[0]?.[0] === "string")
         // if grid is an input grid
         return (
             <InputCell
@@ -47,7 +46,13 @@ const getCellComponent = (
                 row={row}
                 col={col}
                 onCellChange={(value) =>
-                    handleInput(grid as string[][], setter, value, row, col)
+                    handleInput(
+                        gridProps.grid as string[][],
+                        gridProps.setter!,
+                        value,
+                        row,
+                        col
+                    )
                 }
             />
         )
@@ -55,19 +60,13 @@ const getCellComponent = (
     return <OutputCell key={`cell-${row}-${col}`} value={value as number} />
 }
 
-export default function Grid({ grid, setter }: GridProps) {
+export default function Grid(gridProps: GridProps) {
     return (
         <div className="grid-container">
-            {grid.map((row, rowIndex) => (
+            {gridProps.grid.map((row, rowIndex) => (
                 <div key={`row-${rowIndex}`} className="grid-row">
                     {row.map((value, colIndex) =>
-                        getCellComponent(
-                            grid,
-                            setter,
-                            value,
-                            rowIndex,
-                            colIndex
-                        )
+                        getCellComponent(gridProps, value, rowIndex, colIndex)
                     )}
                 </div>
             ))}
