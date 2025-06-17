@@ -38,7 +38,8 @@ const getCellComponent = (
     row: number,
     col: number
 ) => {
-    if (typeof grid[0]?.[0] === "string") {
+    if (typeof grid[0]?.[0] === "string")
+        // if grid is an input grid
         return (
             <InputCell
                 key={`cell-${row}-${col}`}
@@ -50,9 +51,8 @@ const getCellComponent = (
                 }
             />
         )
-    } else {
-        return <OutputCell key={`cell-${row}-${col}`} value={value as number} />
-    }
+    // if grid is an output grid
+    return <OutputCell key={`cell-${row}-${col}`} value={value as number} />
 }
 
 export default function Grid({ grid, setter }: GridProps) {
