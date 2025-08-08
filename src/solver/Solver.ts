@@ -1,14 +1,14 @@
-import Cell from "./Cell.ts"
-import GridUtils from "./GridUtils.ts"
-import SudokuError from "./SudokuError.ts"
+import Cell from "./Cell"
+import GridUtils from "./GridUtils"
+import SudokuError from "./SudokuError"
 
 export default class Solver {
     static readonly rowPermMap: Map<number, number[]> = new Map()
     static readonly DIMENSION = 9
 
     static {
-        Solver.getPermutations(GridUtils.digits).forEach(
-            (rowPerm, index) => this.rowPermMap.set(index, rowPerm)
+        Solver.getPermutations(GridUtils.digits).forEach((rowPerm, index) =>
+            this.rowPermMap.set(index, rowPerm)
         )
     }
 
@@ -42,13 +42,7 @@ export default class Solver {
 
     public static solve(givenCells: Cell[]): number[][] {
         const solutionCells: Cell[] = []
-        if (
-            !this.__solve(
-                solutionCells,
-                0,
-                Solver.getPossibilities(givenCells)
-            )
-        )
+        if (!this.__solve(solutionCells, 0, Solver.getPossibilities(givenCells)))
             throw new SudokuError("Grid cannot be solved")
         return GridUtils.createGrid(solutionCells)
     }
