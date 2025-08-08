@@ -2,13 +2,13 @@ import Cell from "./Cell.ts"
 import GridUtils from "./GridUtils.ts"
 import SudokuError from "./SudokuError.ts"
 
-export default class BruteForcer {
+export default class Solver {
     static readonly rowPermMap: Map<number, number[]> = new Map()
     static readonly DIMENSION = 9
 
     static {
-        BruteForcer.getPermutations(GridUtils.digits).forEach((rowPerm, index) =>
-            this.rowPermMap.set(index, rowPerm)
+        Solver.getPermutations(GridUtils.digits).forEach(
+            (rowPerm, index) => this.rowPermMap.set(index, rowPerm)
         )
     }
 
@@ -31,7 +31,7 @@ export default class BruteForcer {
 
         for (let i = 0; i < GridUtils.DIMENSION; i++) {
             const possibilities: number[] = []
-            BruteForcer.rowPermMap.forEach((rowPerm, key) => {
+            Solver.rowPermMap.forEach((rowPerm, key) => {
                 if (GridUtils.rowConsistentWithCells(rowPerm, i, givenCells))
                     possibilities.push(key)
             })
@@ -42,7 +42,13 @@ export default class BruteForcer {
 
     public static solve(givenCells: Cell[]): number[][] {
         const solutionCells: Cell[] = []
-        if (!this.__solve(solutionCells, 0, BruteForcer.getPossibilities(givenCells)))
+        if (
+            !this.__solve(
+                solutionCells,
+                0,
+                Solver.getPossibilities(givenCells)
+            )
+        )
             throw new SudokuError("Grid cannot be solved")
         return GridUtils.createGrid(solutionCells)
     }
@@ -55,7 +61,7 @@ export default class BruteForcer {
         if (rowIndex >= GridUtils.DIMENSION) return true
 
         for (const permIndex of possibilities.get(rowIndex) || []) {
-            let perm: number[] = BruteForcer.rowPermMap.get(permIndex)!
+            let perm: number[] = Solver.rowPermMap.get(permIndex)!
             let permCells: Cell[] = GridUtils.createRowCellArray(perm, rowIndex)
             if (GridUtils.cellsValid(cellsSoFar.concat(permCells))) {
                 permCells.forEach((cell) => {

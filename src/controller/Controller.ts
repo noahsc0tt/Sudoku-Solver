@@ -1,6 +1,6 @@
 import Cell from "../solver/Cell"
 import Coords from "../solver/Coords"
-import BruteForcer from "../solver/BruteForcer"
+import Solver from "../solver/Solver"
 import GridUtils from "../solver/GridUtils"
 import SudokuError from "../solver/SudokuError"
 
@@ -20,12 +20,10 @@ export class Controller {
     private valueMap: Map<string, number> = new Map()
 
     public setCell(coords: Coords, value: number) {
-        if (isNaN(value)) 
-            throw new TypeError("Please enter a number")
+        if (isNaN(value)) throw new TypeError("Please enter a number")
         else if (value < 1 || value > 9)
             throw new RangeError("Cell value out of range")
-        else 
-            this.valueMap.set(coords.toString(), value)
+        else this.valueMap.set(coords.toString(), value)
     }
 
     public removeCell(coords: Coords): boolean {
@@ -39,7 +37,7 @@ export class Controller {
         })
         if (!GridUtils.cellsValid(cellArray))
             throw new SudokuError("Cells violate sudoku rules")
-        return BruteForcer.solve(cellArray)
+        return Solver.solve(cellArray)
     }
 
     public clear(): void {

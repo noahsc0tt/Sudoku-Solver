@@ -12,13 +12,21 @@ export default class GridUtils {
     static readonly digits: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     static readonly DIMENSION: number = GridUtils.digits.length
 
-    public static rowConsistentWithCells(row: number[], rowIndex: number, cells: Cell[]): boolean {
-        return cells.every(cell => 
-            (cell.coords.row === rowIndex) === (row[cell.coords.column] === cell.value)
+    public static rowConsistentWithCells(
+        row: number[],
+        rowIndex: number,
+        cells: Cell[]
+    ): boolean {
+        return cells.every(
+            (cell) =>
+                (cell.coords.row === rowIndex) ===
+                (row[cell.coords.column] === cell.value)
         )
     }
 
-    public static populateValueLocationsMap(cells: Cell[]): Map<number, ValueLocations> {
+    public static populateValueLocationsMap(
+        cells: Cell[]
+    ): Map<number, ValueLocations> {
         const valueLocationsMap: Map<number, ValueLocations> = new Map()
         let sameValueLocations: ValueLocations
 
@@ -38,7 +46,8 @@ export default class GridUtils {
     }
 
     public static cellsValid(cells: Cell[]): boolean {
-        const valueLocationsMap: Map<number, ValueLocations> = GridUtils.populateValueLocationsMap(cells)
+        const valueLocationsMap: Map<number, ValueLocations> =
+            GridUtils.populateValueLocationsMap(cells)
 
         for (const [_, locations] of valueLocationsMap.entries()) {
             if (
@@ -64,23 +73,23 @@ export default class GridUtils {
     public static createGrid(cells: Cell[]): number[][] {
         if (!GridUtils.cellsValid(cells))
             throw new SudokuError("Cell inputs violate sudoku rules")
-        if (cells.length !== GridUtils.DIMENSION*GridUtils.DIMENSION)
+        if (cells.length !== GridUtils.DIMENSION * GridUtils.DIMENSION)
             throw new TypeError("Not enough cells provided")
-        
+
         return GridUtils.populateGrid(cells)
     }
 
     public static populateGrid(cells: Cell[]): number[][] {
-        const grid: number[][] = Array.from({ length: GridUtils.DIMENSION }, () =>
-            Array(GridUtils.DIMENSION).fill(-1)
+        const grid: number[][] = Array.from(
+            { length: GridUtils.DIMENSION },
+            () => Array(GridUtils.DIMENSION).fill(-1)
         )
-        cells.forEach(
-            cell => {
-                    if (grid[cell.coords.row][cell.coords.column] !== -1) // value for cell already given
-                        throw new SudokuError("Conflicting cell values given")
-                    grid[cell.coords.row][cell.coords.column] = cell.value
-            }
-        )
+        cells.forEach((cell) => {
+            if (grid[cell.coords.row][cell.coords.column] !== -1)
+                // value for cell already given
+                throw new SudokuError("Conflicting cell values given")
+            grid[cell.coords.row][cell.coords.column] = cell.value
+        })
         return grid
     }
 }
