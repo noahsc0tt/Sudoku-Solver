@@ -3,6 +3,7 @@ import Coords from "../solver/Coords"
 import Controller from "../controller/Controller"
 import { updateInputGrid } from "./ViewUtils"
 import { InputCell, OutputCell } from "./Cell"
+import SudokuError from "../solver/SudokuError"
 
 type GridProps = {
     grid: string[][] | number[][]
@@ -11,7 +12,7 @@ type GridProps = {
 
 const handleInput = (
     inputGrid: string[][],
-    setInputGrid,
+    setInputGrid: Function,
     value: string,
     row: number,
     column: number
@@ -26,7 +27,7 @@ const handleInput = (
             Controller.setCell(coords, parseInt(value))
             updateInputGrid(inputGrid, setInputGrid, value, row, column)
         } catch (error) {
-            alert((error as Error).message)
+            alert((error as SudokuError).message)
         }
     }
 }

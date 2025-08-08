@@ -1,5 +1,6 @@
 import Controller from "../controller/Controller"
 import { useState } from "react"
+import SudokuError from "../solver/SudokuError"
 
 const getEmptyInputGrid = () => {
     return [
@@ -30,15 +31,15 @@ export const updateInputGrid = (
     setInputGrid(newGrid)
 }
 
-export const solve = (setOutputGrid) => {
+export const solve = (setOutputGrid: Function) => {
     try {
         setOutputGrid(Controller.solve())
     } catch (error) {
-        alert((error as Error).message)
+        alert((error as SudokuError).message)
     }
 }
 
-export const clear = (setInputGrid: Function, setOutputGrid) => {
+export const clear = (setInputGrid: Function, setOutputGrid: Function) => {
     Controller.clear()
     setInputGrid(getEmptyInputGrid())
     setOutputGrid(getEmptyOutputGrid())
