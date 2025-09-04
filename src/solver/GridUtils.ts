@@ -49,7 +49,7 @@ export default class GridUtils {
         const valueLocationsMap: Map<number, ValueLocations> =
             GridUtils.populateValueLocationsMap(cells)
 
-        for (const [_, locations] of valueLocationsMap.entries()) {
+        for (const [, locations] of valueLocationsMap.entries()) {
             if (
                 locations.rows.length !== new Set(locations.rows).size ||
                 locations.columns.length !== new Set(locations.columns).size ||

@@ -21,7 +21,7 @@ export default class Coords {
     }
 
     public static fromString(str: string): Coords {
-        let [row, column] = str.split(',').map(Number)
+        const [row, column] = str.split(',').map(Number)
         return new Coords(row, column)
     }
 

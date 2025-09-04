@@ -17,8 +17,8 @@ export default class Solver {
         const permutations: T[][] = []
 
         for (let i = 0; i < digits.length; i++) {
-            let digitsCopy = [...digits]
-            let first = digitsCopy.splice(i, 1)[0]
+            const digitsCopy = [...digits]
+            const first = digitsCopy.splice(i, 1)[0]
             for (const permutation of this.getPermutations(digitsCopy)) {
                 permutations.push([first, ...permutation])
             }
@@ -55,8 +55,8 @@ export default class Solver {
         if (rowIndex >= GridUtils.DIMENSION) return true
 
         for (const permIndex of possibilities.get(rowIndex) || []) {
-            let perm: number[] = Solver.rowPermMap.get(permIndex)!
-            let permCells: Cell[] = GridUtils.createRowCellArray(perm, rowIndex)
+            const perm: number[] = Solver.rowPermMap.get(permIndex)!
+            const permCells: Cell[] = GridUtils.createRowCellArray(perm, rowIndex)
             if (GridUtils.cellsValid(cellsSoFar.concat(permCells))) {
                 permCells.forEach((cell) => {
                     cellsSoFar.push(cell)
