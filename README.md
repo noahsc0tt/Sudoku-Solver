@@ -1,6 +1,6 @@
 # Sudoku Solver (React + TypeScript)
 
-An interactive Sudoku solver built with React and TypeScript.  
+A simple browser-based Sudoku solver built with React and TypeScript.  
 Enter your starting digits and solve puzzles using a basic backtracking-style search over row permutations.
 
 
